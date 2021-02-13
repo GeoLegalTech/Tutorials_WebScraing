@@ -54,7 +54,7 @@ n = 5
 lists = [[] for _ in range(n)]
 print (type(lists[1]))
 
-
+table_columns = []
 for element in head_table: # Selecting the first 5 titles
 
     column_label = element.get_text(separator=" ", strip=True)
