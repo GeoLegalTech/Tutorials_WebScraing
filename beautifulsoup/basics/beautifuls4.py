@@ -29,10 +29,10 @@ table_60_3 = soup.select("table.wikitable tbody")[0] #Just the body
 
 # Extraction of the table column headers
 head_table = table_60_3.select("tr th")
-print (head_table)
-print (len(head_table))
+# print (head_table)
+print (type(head_table))
 
-span = soup.select("table.wikitable span")
+span = soup.select("table.wikitable tr td span")
 print (span)
 
 print ("-------")
@@ -43,65 +43,74 @@ print ("-------")
 for element in span:
     print (element.text)
 
-# table_columns = []
-# for element in head_table[0 : 5]: # Selecting the first 5 titles
-#     column_label = element.get_text(separator=" ", strip=True)
-#     table_columns.append(column_label)
-#     print (column_label)
-
-#List creation
-n = 5
-lists = [[] for _ in range(n)]
-print (type(lists[1]))
+for span in soup.find_all("tr td span"):
+    print (span)
 
 
-for element in head_table: # Selecting the first 5 titles
+# # table_columns = []
+# # for element in head_table[0 : 5]: # Selecting the first 5 titles
+# #     column_label = element.get_text(separator=" ", strip=True)
+# #     table_columns.append(column_label)
+# #     print (column_label)
+#
+# # #List creation
+# # n = 5
+# # lists = [[] for _ in range(n)]
+# # print (type(lists[1]))
+# # print (lists)
+#
+#
+# # for element in head_table: # Selecting the first 5 titles
+# #     column_label = element.get_text(separator=" ", strip=True)
+# #     table_columns.append(column_label)
+# #     print (column_label)
+#
+#
+# # print ("---------")
+# # print (table_columns)
+#
+# # table_columns = []
+# # for element in head_table[0 : 5]:
+# #     column_label = element.get_text(separator=" ", strip=True)
+# #     column_label =  column_label.replace(" ", "_")
+# #     table_columns.append(column_label)
+# #     print (column_label)
+# #
+# # print ("---------")
+# # print (table_columns)
+for span in soup.find_all("tr td span"):
+    print (span)
 
+# if span = united kingdom = skip 
+df_list = []
+for
+	df_list.append(pd.DataFrame(table_data, columns=table_columns))
+
+regex=re.compile("_\[\w\]")
+table_columns = []
+for element in head_table[0 : 5]:
     column_label = element.get_text(separator=" ", strip=True)
+    column_label =  column_label.replace(" ", "_")
+    column_label =  regex.sub("", column_label)
     table_columns.append(column_label)
     print (column_label)
+print ("---------")
+print (table_columns)
 
+# Extract the table data
+rows = table_60_3.select("tr")
+print (rows)
 
-# print ("---------")
-# print (table_columns)
+table_data = []
+for index, element in enumerate(rows):
+    if index > 0:
+        row_list = []
+        values = element.select("td")
+        for value in values:
+            row_list.append(value.text.strip())
+        table_data.append(row_list)
+print (table_data)
 
-# table_columns = []
-# for element in head_table[0 : 5]:
-#     column_label = element.get_text(separator=" ", strip=True)
-#     column_label =  column_label.replace(" ", "_")
-#     table_columns.append(column_label)
-#     print (column_label)
-#
-# print ("---------")
-# print (table_columns)
-# #
-# regex=re.compile("_\[\w\]")
-# table_columns = []
-# for element in head_table[0 : 5]:
-#     column_label = element.get_text(separator=" ", strip=True)
-#     column_label =  column_label.replace(" ", "_")
-#     column_label =  regex.sub("", column_label)
-#     table_columns.append(column_label)
-#     print (column_label)
-# print ("---------")
-# print (table_columns)
-#
-#
-#
-# # Extract the table data
-# rows = table_60_3.select("tr")
-# print (rows)
-#
-# table_data = []
-# for index, element in enumerate(rows):
-#     if index > 0:
-#         row_list = []
-#         values = element.select("td")
-#         for value in values:
-#             row_list.append(value.text.strip())
-#         table_data.append(row_list)
-# print (table_data)
-#
 # #Creating the DataFrame
 # df = pd.DataFrame(table_data, columns=table_columns)
 # print (df.head())

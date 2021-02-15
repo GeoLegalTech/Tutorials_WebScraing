@@ -7,6 +7,7 @@ url = "https://www.holzwickede.de/amtsblatt/index.php"
 # Getting content
 download_url =  requests.get(url)
 
+
 # Parse the html with beautifulsoup and creat the object
 soup = BeautifulSoup(download_url.text, features="html.parser")
 
