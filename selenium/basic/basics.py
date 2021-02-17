@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 import time
 import requests
 
+
+# class Gazetteseleium()
 # Download and parse the html
 gazzete_url = "https://www.holzwickede.de/amtsblatt/index.php"
 
