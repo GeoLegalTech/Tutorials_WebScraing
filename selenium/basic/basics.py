@@ -32,7 +32,10 @@ ban = WebDriverWait(browser,15).until(EC.element_to_be_clickable((By.XPATH,"//a[
 
 elem = browser.find_element_by_xpath("//div[@id='content']/div[7]/table//form[@name='gazette_52430']/a[@href='#gazette_52430']")
 elem.click()
+print (browser.current_url)
+print (elem.get_attribute('onclick'))
 # time.sleep(0.2)
 
-out_html = browser.find_element_by_xpath("//*")
-print (elem.get_attribute("outerHTML"))
+# out_html = browser.find_element_by_xpath("//*")
+# print (elem.get_attribute("outerHTML"))
+# print (requered_url)
