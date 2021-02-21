@@ -11,14 +11,20 @@ class Form_Post(scrapy.Spider):
         for links in post:
             form = links.css("input[name='form']::attr(value)").extract()
             hash = links.css("input[name='hash']::attr(value)").extract()
+            yield {"form": form,
+                   "hash": hash,
+            }
 
-            response_post = requests.post(start_urls, params={'hash':hash, 'form': form})
-            link = response_post.url
+
+
+
+
+
+            # response_post = requests.post(start_urls, params={'hash':hash, 'form': form})
+            # link = response_post.url
 
             # form = links.xpath("//input[@name='form']/@value").extract()
             # hash = links.xpath("//input[@name='hash']/@value").extract()
-            yield {"link": link
-            }
 
 #         form class=put
 # response.css("form[method=post]").xpath("//input[@name='form']/@value").get()
