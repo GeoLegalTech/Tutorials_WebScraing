@@ -1,19 +1,25 @@
 import scrapy
 import requests
+from ..items import FormItem
 
 class Form_Post(scrapy.Spider):
     name = "form_post"
     start_urls = ["https://www.holzwickede.de/amtsblatt/index.php"]
 
     def parse(self, response):
+        #Instance Variable
+        items = FormItem()
+
         post = response.css("form[method=post]")
 
         for links in post:
             form = links.css("input[name='form']::attr(value)").extract()
             hash = links.css("input[name='hash']::attr(value)").extract()
-            yield {"form": form,
-                   "hash": hash,
-            }
+
+            items["form"] = form
+            items["hash"] = hash
+
+            yield items
 
 
 
