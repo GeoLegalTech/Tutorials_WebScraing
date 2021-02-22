@@ -11,4 +11,4 @@ class FormItem(scrapy.Item):
     # define the fields for your item here like:
     form = scrapy.Field()
     hash = scrapy.Field()
-    
+    link = scrapy.Field()
