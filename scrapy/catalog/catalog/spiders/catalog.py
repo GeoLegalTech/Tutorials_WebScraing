@@ -1,54 +1,64 @@
 import scrapy
 import requests
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
 from ..items import CatalogItem
-
-def get_headers(s, sep=': ', strip_cookie=True, strip_cl=True, strip_headers: list = []) -> dict():
-    d = dict()
-    for kv in s.split('\n'):
-        kv = kv.strip()
-        if kv and sep in kv:
-            v=''
-            k = kv.split(sep)[0]
-            if len(kv.split(sep)) == 1:
-                v = ''
-            else:
-                v = kv.split(sep)[1]
-            if v == '\'\'':
-                v =''
-            # v = kv.split(sep)[1]
-            if strip_cookie and k.lower() == 'cookie': continue
-            if strip_cl and k.lower() == 'content-length': continue
-            if k in strip_headers: continue
-            d[k] = v
-    return d
+from scrapy.spiders import CrawlSpider, Rule
+from scrapy.linkextractors import LinkExtractor
+import lxml.html
+import time
 
 class CatalogSpider(scrapy.Spider):
-    name = "catalog"
-    start_urls = ["https://www.myeblaettle.de/?group=1289"]
+    name = 'catalog'
+    allowed_domains = ["myeblaettle.de"]
+    start_urls = ['https://www.myeblaettle.de/?group=1289']
+    # path = "/Users/mr/Desktop/chromedriver"
+
+    def __init__(self):
+        # Web chrome init
+        self.driver = webdriver.Chrome("/Users/mr/Desktop/chromedriver")
 
     def parse(self, response):
+        page = self.driver.get(response.url)
+        self.driver.find_element_by_xpath("//button[@id='cookieNoticeAcceptAllButton']").click()
+        time.sleep(10)
+        self.driver.find_element_by_xpath("//a[@href='https://www.myeblaettle.de/frontend/getcatalog.do?catalogId=191056&catalogVersion=1&lang=de']").click()
+        time.sleep(5)
+        self.driver.find_element_by_xpath("//a[href='/frontend/catalogs/191056/1/pdf/complete.pdf;jsessionid=2F24632DADB037CF007A188FA24E9CDA']").click()
+        # find the element that we need to click
+        print ()
+        link_extraction = self.driver.find_element(By.ID, "sharing_sub_save")
+# sharing_sub_save
 
-        #Instance Variable for database
-        items = CatalogItem()
+        # print (page)
+        # root = page_test.find_element_by_xpath("//a")
+        # root = lxml.html.fromstring(page.get_html_source())
+        yield {
+        "html": link_extraction
+        }
 
-        # Execute when its a post method
-        post = response.css("a")
+        # links = page.css("a")
 
-        yield {"link" : post}
+        # for links in links:
+        #     link_test = links.css("href").extract()
+        #
+        #     yield {
+        #            "links" : link_test
+        #            }
 
-        # for link_site in self.start_urls:
+        # while True:
+        #     next = self.driver.find_element_by_xpath("//button[@id='cookieNoticeAcceptAllButton']")
         #
-        #     for links in post:
-        #     # Extraction values to push
-        #         form = links.css("input[name='form']::attr(value)").extract()
-        #         hash = links.css("input[name='hash']::attr(value)").extract()
+        #     try:
+        #         next.click()
         #
-        #         # Push the request parameters & get url
-        #         response_post = requests.post(link_site, params={'hash':hash, 'form': form})
-        #         link = response_post.url
+        #     except:
+        #         pass
+        #         # break
         #
-        #         items["form"] = form
-        #         items["hash"] = hash
-        #         items["link"] = link
-        #
-        #         yield items
+        #     self.driver.close()

@@ -1,32 +1,74 @@
-# Script to pass cookies along with HTTP request
-#         using"requests" package
-#
-#        Code by GeoMario
-
-# Packages
 import requests
+from requests.exceptions import HTTPError
+from selenium import webdriver
+# from seleniumwire import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
+import time
+import requests
+# # Path chromedriver & get url
+# path = "/Users/mr/Desktop/chromedriver"
+# browser = webdriver.Chrome(path)
 
-# Custom headers
-
-headers = {
-"accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-"accept-encoding": "gzip, deflate, br",
-"accept-language": "en-US,en;q=0.9,es;q=0.8,de;q=0.7,en-GB;q=0.6",
-"cache-control": "max-age=0",
-"cookie": "_gcl_au=1.1.1265878579.1614168471; _ga=GA1.2.1821975775.1614168471; _gid=GA1.2.911280566.1614168471; _hjid=a6e226a3-de63-43f8-af00-2edfd0a06016; _hjFirstSeen=1; ki_r=; _hjAbsoluteSessionInProgress=1; ki_t=1614168471370%3B1614168471370%3B1614168745665%3B1%3B4; _gat_UA-128559955-1=1; amplitude_id_eadd7e2135597c308ef5d9db3651c843requestbin.com=eyJkZXZpY2VJZCI6ImNiNGY3MGIyLTNjNmMtNDA5MC1iZTg1LTA4Mzc0Y2NjNjk3ZVIiLCJ1c2VySWQiOm51bGwsIm9wdE91dCI6ZmFsc2UsInNlc3Npb25JZCI6MTYxNDE2ODQ3MTE1NiwibGFzdEV2ZW50VGltZSI6MTYxNDE2ODc0NzMyMSwiZXZlbnRJZCI6NSwiaWRlbnRpZnlJZCI6MCwic2VxdWVuY2VOdW1iZXIiOjV9; _uetsid=f262bde0769811ebbd4b11ab02b4aaa1; _uetvid=f262d560769811eb9bd2b7fefe560a9d",
-"sec-ch-ua":"'Chromium';v='88', 'Google Chrome';v='88', ';Not A Brand';v='99'",
-"sec-ch-ua-mobile": "?0",
-"sec-fetch-dest": "document",
-"sec-fetch-mode": "navigate",
-"sec-fetch-site": "same-origin",
-"sec-fetch-user": "?1",
-"upgrade-insecure-requests": "1",
-"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36",
-
-}
-
-# request url
-url = "https://enbph9omv9wjj.x.pipedream.net/"
+# # # Create the response from the actions
+# # for request in browser.requests:
+# # 	# print (request.get)
+# # browser.get("https://www.myeblaettle.de/?group=1289")
+# # browser.implicitly_wait(10)
+#
+# def get_headers(s, sep=': ', strip_cookie=False, strip_cl=True, strip_headers: list = []) -> dict():
+#     d = dict()
+#     for kv in s.split('\n'):
+#         kv = kv.strip()
+#         if kv and sep in kv:
+#             v=''
+#             k = kv.split(sep)[0]
+#             if len(kv.split(sep)) == 1:
+#                 v = ''
+#             else:
+#                 v = kv.split(sep)[1]
+#             if v == '\'\'':
+#                 v =''
+#             # v = kv.split(sep)[1]
+#             if strip_cookie and k.lower() == 'cookie': continue
+#             if strip_cl and k.lower() == 'content-length': continue
+#             if k in strip_headers: continue
+#             d[k] = v
+#     return d
+#
+# # Custom headers
+# h = get_headers('''
+# Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+# Accept-Encoding: gzip, deflate, br
+# Accept-Language: en-US,en;q=0.9,es;q=0.8,de;q=0.7,en-GB;q=0.6
+# Cache-Control: max-age=0
+# Connection: keep-alive
+# Cookie: _ga=GA1.2.1973768868.1614089083;
+# Host: www.myeblaettle.de
+# If-Modified-Since: Tue, 12 Jan 2021 15:07:30 GMT
+# If-None-Match: W/"5ffdbb32-16d9"
+# sec-ch-ua: "Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99"
+# sec-ch-ua-mobile: ?0
+# Sec-Fetch-Dest: document
+# Sec-Fetch-Mode: navigate
+# Sec-Fetch-Site: none
+# Sec-Fetch-User: ?1
+# Upgrade-Insecure-Requests: 1
+# User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
+#
+# ''')
+#
+# url = "https://www.myeblaettle.de/?group=1289"
 # make HTTP GET rewquests
-response = requests.get(url, headers=headers)
-print (response.text)
+
+# Path chromedriver & get url
+path = "/Users/mr/Desktop/chromedriver"
+browser = webdriver.Chrome(path)
+response = browser.get(url)
+# print (response)
+
+# print (WebDriverWait(browser,15).until(EC.element_to_be_clickable((By.XPATH,"//button[@id='cookieNoticeAcceptAllButton']"))).click())
+WebDriverWait(browser,50).until(EC.element_to_be_clickable((By.XPATH,"//button[@id='cookieNoticeAcceptAllButton']"))).click()
+elem = browser.find_element_by_xpath("//span")

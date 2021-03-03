@@ -1,33 +1,50 @@
 import requests
-from requests.exceptions import HTTPError
-from selenium import webdriver
-from seleniumwire import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from bs4 import BeautifulSoup
-import time
-import requests
-
-# Reading the source code and actions
-# Path chromedriver & get url
-path = "/Users/mr/Desktop/chromedriver"
-browser = webdriver.Chrome(path)
-
-browser.get("https://www.myeblaettle.de/?group=1289")
-browser.implicitly_wait(10)
-
-# # Create the response from the actions
-# for request in browser.requests:
-# 	# print (request.get)
-print (WebDriverWait(browser,15).until(EC.element_to_be_clickable((By.XPATH,"//button[@id='cookieNoticeAcceptAllButton']"))).click())
 
 
-# elem = browser.find_element_by_xpath("//*[@id='content']/div[7]/table/tbody/tr[3]/td[3]/form/a")
-elem = browser.find_element_by_xpath("//div[@id='list']/div[1]/div[@class='inner']/div/a[@href='https://www.myeblaettle.de/frontend/getcatalog.do?catalogId=189943&catalogVersion=1&lang=de']").click()
-# elem.submit()
-print (elem)
-print (type(elem))
+def get_headers(s, sep=': ', strip_cookie=False, strip_cl=True, strip_headers: list = []) -> dict():
+    d = dict()
+    for kv in s.split('\n'):
+        kv = kv.strip()
+        if kv and sep in kv:
+            v=''
+            k = kv.split(sep)[0]
+            if len(kv.split(sep)) == 1:
+                v = ''
+            else:
+                v = kv.split(sep)[1]
+            if v == '\'\'':
+                v =''
+            # v = kv.split(sep)[1]
+            if strip_cookie and k.lower() == 'cookie': continue
+            if strip_cl and k.lower() == 'content-length': continue
+            if k in strip_headers: continue
+            d[k] = v
+    return d
+
+# Custom headers
+h = get_headers('''
+Accept: application/json, text/javascript, */*; q=0.01
+Referer: https://www.myeblaettle.de/frontend/getcatalog.do?catalogId=191056&catalogVersion=1&lang=de
+sec-ch-ua: "Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99"
+sec-ch-ua-mobile: ?0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36
+X-Requested-With: XMLHttpRequest
+''')
+
+# URL poiting
+url = "https://www.myeblaettle.de/?group=1289"
+# url = "https://en65r2x3w2axx.x.pipedream.net"
+
+# Response website
+response = requests.get(url, headers=h)
+print (response)
+print (response.text)
+
+
+
+
+# browser.get("https://www.myeblaettle.de/?group=1289")
+
 
 # url = ["https://www.myeblaettle.de/?group=1289"]
 #
