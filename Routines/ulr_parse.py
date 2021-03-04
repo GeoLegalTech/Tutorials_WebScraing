@@ -55,8 +55,3 @@ issu= parts.query.split('=')[1]
 print (parts.query.split('=')[1])
 
 print (parts._replace(issu, "1281")
-    # print (url, query)
-
-
-
-    # print (query)

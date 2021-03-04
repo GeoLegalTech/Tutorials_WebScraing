@@ -75,5 +75,5 @@ class MyblatteSpider(scrapy.Spider):
                     pass
 
         yield {
-        "linkid" : link
+        "linkid" : linkThe
         }
