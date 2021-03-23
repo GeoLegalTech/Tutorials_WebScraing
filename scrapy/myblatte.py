@@ -1,6 +1,8 @@
 import scrapy
 import json
 from urllib.parse import urlparse
+from PyPDF2 import PdfFileReader
+from datetime import datetime
 
 # Define functions
 def get_headers(s, sep=': ', strip_cookie=False, strip_cl=True, strip_headers: list = []) -> dict():
@@ -71,9 +73,20 @@ class MyblatteSpider(scrapy.Spider):
                 if key == 'id':
                     link = 'https://www.myeblaettle.de/frontend/catalogs/'+str(issue[key])+'/1/pdf/complete.pdf'
                     print (link)
+                    # path = "/Users/mr/Documents/scrapy_tutorial/Routines/2021-02-24 (34).pdf"
+
+                    with open(link, "rb") as f:
+                        pdf = PdfFileReader(f)
+                        info = pdf.getDocumentInfo()
+                        number_pages = pdf.getNumPages()
+                        # date = datetime.strptime(info["/ModDate"],'%y/%m/%d %H:%M:%S')
+
+                    print (info)
+                    print (date)
+
                 else :
                     pass
 
         yield {
-        "linkid" : linkThe
+        "linkid" : link
         }
