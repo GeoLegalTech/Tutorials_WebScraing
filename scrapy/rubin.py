@@ -25,7 +25,7 @@ def get_years_months(my_date, num_months):
 
 class Pagination(scrapy.Spider):
     name = 'pagination_rubin'
-    start_urls = ["https://schifferstadt.more-rubin1.de/sitzungskalender.php"]#, "https://andernach.more-rubin1.de/sitzungskalender.php" , "https://schoenebeck.more-rubin1.de/sitzungskalender.php", "https://amt-sylt.more-rubin1.de/sitzungskalender.php", "https://stadtfehmarn.more-rubin1.de/sitzungskalender.php"]
+    start_urls = ["https://schifferstadt.more-rubin1.de/sitzungskalender.php", "https://andernach.more-rubin1.de/sitzungskalender.php" , "https://schoenebeck.more-rubin1.de/sitzungskalender.php", "https://amt-sylt.more-rubin1.de/sitzungskalender.php", "https://stadtfehmarn.more-rubin1.de/sitzungskalender.php"]
 
     # # Make the asynchron stopping (Requests one by one)
     # custom_settings = {
