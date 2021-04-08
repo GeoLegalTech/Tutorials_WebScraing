@@ -2,6 +2,7 @@ import json
 import scrapy
 import datetime
 import requests
+from ..items import RubinItem
 from urllib.parse import urlparse
 from scrapy.crawler import CrawlerProcess
 from dateutil.relativedelta import relativedelta
@@ -25,7 +26,7 @@ def get_years_months(my_date, num_months):
 
 class Pagination(scrapy.Spider):
     name = 'pagination_rubin'
-    start_urls = ["https://schifferstadt.more-rubin1.de/sitzungskalender.php", "https://andernach.more-rubin1.de/sitzungskalender.php" , "https://schoenebeck.more-rubin1.de/sitzungskalender.php", "https://amt-sylt.more-rubin1.de/sitzungskalender.php", "https://stadtfehmarn.more-rubin1.de/sitzungskalender.php"]
+    start_urls = ["https://schifferstadt.more-rubin1.de/sitzungskalender.php" , "https://andernach.more-rubin1.de/sitzungskalender.php"] # , "https://schoenebeck.more-rubin1.de/sitzungskalender.php", "https://amt-sylt.more-rubin1.de/sitzungskalender.php", "https://stadtfehmarn.more-rubin1.de/sitzungskalender.php"]
 
     # # Make the asynchron stopping (Requests one by one)
     # custom_settings = {
@@ -34,14 +35,13 @@ class Pagination(scrapy.Spider):
     # }
 
     def __init__(self):
-
         # pass
         new_starturl = []
         for new_link in self.start_urls:
             trial_url = urlparse(new_link)
             trial_url =  trial_url._replace(query="skc_zeitraum=1&skc_ansicht=k&d_von=2021-01&d_bis=2021-01&koerperschaft=")
             base_url = trial_url.geturl()
-            months = get_years_months(datetime.date.today(), 4)
+            months = get_years_months(datetime.date.today(), 1)
             for month in months:
                 (month, day) = month
                 new_date = str(month) + "-" + str(day)
@@ -62,6 +62,7 @@ class Pagination(scrapy.Spider):
     def parse(self, response):
         # pass
         # print('response url:', response.url) #Control flag
+
 
         post = response.css("form[method=post]")
         hash = post.css("input[name='sid']::attr(value)").extract()
@@ -95,6 +96,8 @@ class Pagination(scrapy.Spider):
 
     def parse_doc(self, response):
 
+        items = RubinItem()
+
         get = response.css("form[method=get]")
         for links in get:
             parse_url = urlparse(response.url)
@@ -117,11 +120,16 @@ class Pagination(scrapy.Spider):
             site_path = "/show_pdf.php"
             parse_url = urlparse(response.url)
             site_url = parse_url.scheme + '://' + parse_url.netloc + site_path
-            link = requests.get(site_url, params=params)
-            # print (response.url)
-            # print ('URL:', link.url)
+            link = requests.post(site_url, params=params)
+            link = link.url
+
+            items["link"] = link
+
+            yield items
 
     def parse_api(self, response):
+
+        items = RubinItem()
 
         div = response.css("div[id='content']")
         for links in div:
@@ -131,11 +139,8 @@ class Pagination(scrapy.Spider):
                 parse_url = parse_url._replace(path="documents.php")
                 parse_url = parse_url._replace(query=query_new)
                 parse_url = parse_url.geturl()
-                print (response.url)
-                print ('URL: ', parse_url)
+                link = parse_url
+                # print (type(parse_url))
 
-
-# run scraper
-process = CrawlerProcess()
-process.crawl(Pagination)
-process.start()
+                items["link"] = link
+                yield items
