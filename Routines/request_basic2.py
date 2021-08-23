@@ -1,9 +1,4 @@
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
-import re
-
-
+import  requests
 # Functions
 def get_headers(s, sep=': ', strip_cookie=False, strip_cl=True, strip_headers: list = []) -> dict():
     d = dict()
@@ -43,16 +38,7 @@ Upgrade-Insecure-Requests: 1
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36
 ''')
 
-# Download and parse the html
-scifi_url = "https://www.lokalmatador.de/epaper/ausgabe/wochenblatt-der-stadt-weil-der-stadt-28-2021/"
+url = "http://www.lokalmatador.de/epaper/ausgabe/wochenblatt-der-stadt-weil-der-stadt-28-2021/"
 
-# Download the html from the scifi_url
-download_url = requests.get(scifi_url, headers=h)
-# print (download_url.body)
-
-# Parse the html with beautiful soup and create object
-soup = BeautifulSoup(download_url.text, features="html.parser")
-
-# Create a Local Copy.
-with open("matador.html", "w") as file:
-	file.write(soup.prettify())
+requ = requests.get(url, headers=h)
+print (requ.url)

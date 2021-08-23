@@ -57,8 +57,6 @@ class Pagination(scrapy.Spider):
         # Control flag
         # print (self.start_urls)
 
-
-
     def parse(self, response):
         # pass
         # print('response url:', response.url) #Control flag
@@ -117,9 +115,12 @@ class Pagination(scrapy.Spider):
             site_path = "/show_pdf.php"
             parse_url = urlparse(response.url)
             site_url = parse_url.scheme + '://' + parse_url.netloc + site_path
+            print ("site url")
+            print (site_url)
             link = requests.get(site_url, params=params)
             # print (response.url)
-            # print ('URL:', link.url)
+            print ("There is no docus")
+            print ('URL:', link.url)
 
     def parse_api(self, response):
 
@@ -131,7 +132,8 @@ class Pagination(scrapy.Spider):
                 parse_url = parse_url._replace(path="documents.php")
                 parse_url = parse_url._replace(query=query_new)
                 parse_url = parse_url.geturl()
-                print (response.url)
+                # print (response.url)
+                print ("There is no docus")
                 print ('URL: ', parse_url)
 
 

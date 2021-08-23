@@ -3,6 +3,7 @@ import json
 from urllib.parse import urlparse
 from PyPDF2 import PdfFileReader
 from datetime import datetime
+from scrapy.crawler import CrawlerProcess
 
 # Define functions
 def get_headers(s, sep=': ', strip_cookie=False, strip_cl=True, strip_headers: list = []) -> dict():
@@ -90,3 +91,8 @@ class MyblatteSpider(scrapy.Spider):
         yield {
         "linkid" : link
         }
+
+if __name__ == "__main__":
+  process = CrawlerProcess()
+  process.crawl(MyblatteSpider)
+  process.start()
