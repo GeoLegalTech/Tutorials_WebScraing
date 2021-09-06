@@ -1,8 +1,8 @@
-import scrapy
 import json
-from urllib.parse import urlparse
-from PyPDF2 import PdfFileReader
+import scrapy
 from datetime import datetime
+from PyPDF2 import PdfFileReader
+from urllib.parse import urlparse
 from scrapy.crawler import CrawlerProcess
 
 # Define functions
@@ -31,7 +31,7 @@ def get_headers(s, sep=': ', strip_cookie=False, strip_cl=True, strip_headers: l
 
 class MyblatteSpider(scrapy.Spider):
     name = 'myblatte'
-    start_urls = ['https://www.myeblaettle.de/?group=1289', 'https://www.myeblaettle.de/?group=1281']
+    start_urls = ['https://www.myeblaettle.de/?group=1289', 'https://www.myeblaettle.de/?group=1281', 'https://www.myeblaettle.de/?group=1292']
     headers = get_headers('''
     Accept: */*
     Accept-Encoding: gzip, deflate, br
@@ -50,6 +50,8 @@ class MyblatteSpider(scrapy.Spider):
     ''')
 
     def parse(self, response):
+        print (response)
+        # https://www.myeblaettle.de/?group=1281
         # url = "https://www.myeblaettle.de/frontend/mvc/issueFeed/groupsAndIssues?&position=0&group=1289&allMode=false&mode=public"
         for issue_num in range(1289, 1427):
             base_url = "https://www.myeblaettle.de/frontend/mvc/issueFeed/groupsAndIssues?&position=0&group=1289&allMode=false&mode=public"
@@ -59,7 +61,6 @@ class MyblatteSpider(scrapy.Spider):
             parts = parts.replace(issue, str(issue_num))
             url = url._replace(query=parts)
             url = url.geturl()
-
 
             yield scrapy.Request(url,
             callback= self.parse_api,
@@ -74,20 +75,8 @@ class MyblatteSpider(scrapy.Spider):
                 if key == 'id':
                     link = 'https://www.myeblaettle.de/frontend/catalogs/'+str(issue[key])+'/1/pdf/complete.pdf'
                     print (link)
-                    # path = "/Users/mr/Documents/scrapy_tutorial/Routines/2021-02-24 (34).pdf"
-
-                    with open(link, "rb") as f:
-                        pdf = PdfFileReader(f)
-                        info = pdf.getDocumentInfo()
-                        number_pages = pdf.getNumPages()
-                        # date = datetime.strptime(info["/ModDate"],'%y/%m/%d %H:%M:%S')
-
-                    print (info)
-                    print (date)
-
-                else :
+                else:
                     pass
-
         yield {
         "linkid" : link
         }
