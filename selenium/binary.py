@@ -83,18 +83,18 @@ class Pagination(scrapy.Spider):
     def __init__(self):
         # pass
         ''' Local test, no binary '''
-        path = "/Users/mr/Desktop/chromedriver"
-        self.driver = webdriver.Chrome(path)
+        # path = "/Users/mr/Desktop/chromedriver"
+        # self.driver = webdriver.Chrome(path)
 
         ''' Server Test, binary '''
         # path = "/usr/local/bin/chromedriver"
-        # s = Service(path)
-        # WINDOW_SIZE = "1920,1080"
-        # chrome_options = Options()
-        # chrome_options.add_argument("--headless")
-        # chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
-        # chrome_options.add_argument('--no-sandbox')
-        # self.driver = webdriver.Chrome(service = s, options=chrome_options)
+        s = Service(path)
+        WINDOW_SIZE = "1920,1080"
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+        chrome_options.add_argument('--no-sandbox')
+        self.driver = webdriver.Chrome(service = s, options=chrome_options)
 
         new_starturl = []
         for new_link in self.start_urls:
