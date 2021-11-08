@@ -8,8 +8,8 @@ from scrapy.crawler import CrawlerProcess
 
 class Pagination(scrapy.Spider):
     name = 'pagination_rubin'
-    start_urls = ["https://schifferstadt.more-rubin1.de/sitzungskalender.php"] #, "https://andernach.more-rubin1.de/sitzungskalender.php"]
-    # start_urls = ["https://andernach.more-rubin1.de/sitzungskalender.php"] #, "https://andernach.more-rubin1.de/sitzungskalender.php" , "https://schifferstadt.more-rubin1.de/sitzungskalender.php", "https://schoenebeck.more-rubin1.de/sitzungskalender.php", "https://amt-sylt.more-rubin1.de/sitzungskalender.php", "https://stadtfehmarn.more-rubin1.de/sitzungskalender.php"]
+    # start_urls = ["https://schifferstadt.more-rubin1.de/sitzungskalender.php"] #, "https://andernach.more-rubin1.de/sitzungskalender.php"]
+    start_urls = ["https://andernach.more-rubin1.de/sitzungskalender.php" , "https://schifferstadt.more-rubin1.de/sitzungskalender.php", "https://schoenebeck.more-rubin1.de/sitzungskalender.php", "https://amt-sylt.more-rubin1.de/sitzungskalender.php", "https://stadtfehmarn.more-rubin1.de/sitzungskalender.php"]
 
     # # Make the asynchron stopping (Requests one by one)
     # custom_settings = {
@@ -24,7 +24,7 @@ class Pagination(scrapy.Spider):
             trial_url = urlparse(new_link)
             trial_url =  trial_url._replace(query="skc_zeitraum=1&skc_ansicht=k&d_von=2021-01&d_bis=2021-01&koerperschaft=")
             base_url = trial_url.geturl()
-            for month_num in range(1, 4):
+            for month_num in range(1, 7):
                 url = urlparse(base_url)
                 month = url.query.split('=')[3].split('&')[0].split('-')[1]
                 parts = url.query
@@ -34,11 +34,12 @@ class Pagination(scrapy.Spider):
                 new_starturl.append(url)
                 self.start_urls = new_starturl
         # Control flag
-        # print (self.start_urls)
+        print (self.start_urls)
 
     def parse(self, response):
         # pass
         get = response.css("form[method=get]")
+        print (get)
         sid = get.css("input[name='sid']::attr(value)").getall()
         for link in sid:
             parse_url = urlparse(response.url)
@@ -47,16 +48,20 @@ class Pagination(scrapy.Spider):
             parse_url = parse_url.geturl()
             parse_url = parse_url + link
             print (parse_url)
-
+    #
             if parse_url is not None:
                 yield scrapy.Request(parse_url, callback=self.parse_doc)
-
-
+    #
+    #
     def parse_doc(self, response):
         # pass
         div = response.css("div[id='content']")
         for links in div:
-            querys = links.css("div[component='MeetingPage']::attr(vue-passed-meeting)").re(r'document_type_id+=\d+&[a-zA-Z]+[_a-zA-Z]+=[a-zA-Z_\d\w\.\-\%\&\=]+')
+            querys = links.xpath("//script/text()").re(r'document_type_id+=\d+&[a-zA-Z]+[_a-zA-Z]+=[a-zA-Z_\d\w\.\-\%\&\=]+')
+            ''' Old system '''
+            # print (len(links.xpath("//script/text()").getall()))
+            # querys = links.css("div[component='MeetingPage']::attr(vue-passed-meeting)").re(r'document_type_id+=\d+&[a-zA-Z]+[_a-zA-Z]+=[a-zA-Z_\d\w\.\-\%\&\=]+')
+            ''' Old system '''
             for query_new in querys:
                 parse_url = urlparse(response.url)
                 parse_url = parse_url._replace(path="documents.php")

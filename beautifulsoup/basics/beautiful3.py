@@ -44,7 +44,7 @@ User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (
 ''')
 
 # Download and parse the html
-scifi_url = "https://www.lokalmatador.de/epaper/ausgabe/wochenblatt-der-stadt-weil-der-stadt-28-2021/"
+scifi_url = "https://stadtfehmarn.more-rubin1.de/calendar.php?month=2021-10"
 
 # Download the html from the scifi_url
 download_url = requests.get(scifi_url, headers=h)
@@ -54,5 +54,5 @@ download_url = requests.get(scifi_url, headers=h)
 soup = BeautifulSoup(download_url.text, features="html.parser")
 
 # Create a Local Copy.
-with open("matador.html", "w") as file:
+with open("rubin_4.html", "w") as file:
 	file.write(soup.prettify())
